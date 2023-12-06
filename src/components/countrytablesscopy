@@ -1,0 +1,224 @@
+//// after getting single record on button click show report 13-09-2023
+import {React, useState, useEffect} from 'react';
+import DataTable from 'react-data-table-component';
+import axios from "axios";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import base_url from "../api/bootapi";
+import {Input,Button,Row,Col,Label,FormGroup} from 'reactstrap';
+
+import {CSVLink, CSVDownload} from 'react-csv';
+const CountriesTables_Analysis=()=>{
+  const [search, setSearch]=useState("");
+  const [countries, setCountries]=useState([]);
+  const [table_data, setTable_data]=useState([]);
+  const [filteredCountries, setFilteredCountries]=useState([]);
+  const [scheme_id, setScheme_id] =  useState([]);
+  const [amount, setAmount] =  useState([]);
+  const [parentscheme, setParentscheme] =  useState([])
+  const [schemename, setSchemename]=useState([]);
+    const [isAdmini, setIsAdmini] = useState(false);
+    var emp_code="";
+  var status="Incomplete";
+
+  const savereward=()=>{
+    alert('save called');
+   
+    
+  }
+  function showreport(){
+   
+    var sch_id=document.getElementById("scheme_name").value;
+    alert('showreport'+sch_id);
+    const getCountries= async (status)=>{
+      axios.get(`${base_url}/single_scheme_react?scheme_id=`+sch_id).then(
+        (response)=>{ 
+          console.log("the dataa"+response);  
+          setCountries(response.data);
+          setFilteredCountries(response.data);
+        },
+        (error)=>{
+            alert(error);
+        },[]);
+    };
+    getCountries(status);
+    const result=countries.filter(country=>{
+      return country.name.toLowerCase().match(search.toLowerCase());
+    })
+    setFilteredCountries(result);
+}
+ 
+
+  useEffect(()=>{
+
+    var emp_c=localStorage.getItem("emp_menu");
+    emp_code=JSON.parse(emp_c);
+    if(emp_code==='OMI-1045'){
+        setIsAdmini(true);
+       
+    }
+    axios.get(`${base_url}/loadicmschemename?emp_code=`+emp_code).then(
+          
+      (response)=>{ 
+        
+        console.log(response.data);
+        setSchemename(response.data);
+        
+      },
+      (error)=>{
+          alert("schemename "+error);
+      },[]);
+
+ 
+},[search]);
+
+
+  const columns=[
+    {
+        // <a href="/schemedetails?scheme_id={row.scheme_id}">{row.scheme_id}</a>
+        name:<b>SCHEME ID</b>,
+        selector:(row) =><a id="sch_id" href={`/schemedetails?scheme_id=${row.scheme_id}`}>{row.scheme_id}</a>,
+        sortable:true,
+        
+    },
+    {
+        name:<b>SCHEME NAME</b>,
+        selector:(row) =>row.scheme_name
+    },
+    {
+        name:<b>SCHEME_FIN_YR</b>,
+        selector:(row) =>row.scheme_fin_yr
+    },
+    {
+        name:<b>START_DATE</b>,
+        selector:(row) =>row.start_date
+    },
+    {
+        name:<b>END_DATE</b>,
+        selector:(row) =>row.end_date
+    },
+    {
+        name:<b>ACTIVE_FLAG</b>,
+        selector:(row) =>row.active_flag
+    },
+    {
+        name:<b>COMPUTATION_CYCLE</b>,
+        selector:(row) =>row.computation_cycle
+    },
+    {
+        name:<b>PAYOUT_CYCLE</b>,
+        selector:(row) =>row.payout_cycle
+    },
+    {
+        name:<b>CREATED_BY</b>,
+        selector:(row) =>row.created_by
+    },
+    {
+        name:<b>CREATION_DATE</b>,
+        selector:(row) =>row.creation_date
+    },
+    {
+        name:<b>COUNTRY</b>,
+        selector:(row) =>row.country
+    },
+    {
+        name:<b>STATE</b>,
+        selector:(row) =>row.state
+    },
+    {
+        name:<b>CITY</b>,
+        selector:(row) =>row.city
+    },
+    {
+      name:"AMOUNT",
+      
+      // cell:row =><button className='btn btn-primary' onClick={()=>alert('Hii Shilpi '+row.alpha2Code)}>Edit</button>
+      selector:(row) => 
+      <Input id={"incentive_amt"+row.scheme_id} name="incentive_amt" type="text" style={{width:"100px"}}/>
+    
+  }];
+
+    function row_selected(e){
+      setTable_data(e.selectedRows);
+     
+
+    }
+  
+  
+    function handleChange(){
+      alert("sellect");
+     
+      console.log(table_data);
+      var data = table_data;
+      table_data.map((arr) => {
+
+        console.log(arr.scheme_id);
+        setScheme_id(arr.scheme_id);
+        var a=document.getElementById("incentive_amt"+arr.scheme_id).value;
+        console.log("the a value _"+a);
+        setAmount(a);
+        axios.post(`${base_url}/savepoint_amt_val?scheme_id=`+arr.scheme_id+`&amt=`+a).then(
+          (response)=>{
+            alert('all ok saved row successfully')
+          },
+          (error)=>{
+            alert('not saved')
+              console.log(error);         
+          }
+       )
+      });
+    }
+  
+   // const actionsMemo = React.useMemo(() => <Export onExport={() => downloadCSV(filteredCountries)} />, []);
+  return(
+    <>
+
+<Row>
+                                        <Col md={3}>
+                                            <FormGroup>
+                                                <Label for="scheme_name">Scheme Name :<span style={{color:'red'}}><b>*</b></span></Label>                               
+                                            </FormGroup>
+                                        </Col>
+                                        <Col md={3}>                                              
+                                                <Input id="scheme_name" name="scheme_name" type="select">
+                                                    {
+                                                        schemename.map((year) => (
+                                                            <option key={year} value={year.scheme_id}>{year.scheme_name}</option>
+                                                        ))
+                                                    }
+                                                </Input>
+
+                                                </Col>
+                                            <Col>
+                                            <Button className='btn btn-sm' style={{width:120,height:35,backgroundColor:"rgb(2, 123, 198)",border:"none"}} onClick={showreport}>Show Report</Button>  
+                                            </Col>
+                                            </Row> 
+
+    <Button className='btn btn-sm btn-info'><CSVLink data={filteredCountries}  style={{"text-decoration": "none",color:"black"}}>Download me</CSVLink></Button>
+ <DataTable
+     
+     columns={columns} 
+     data={filteredCountries}
+     pagination
+     fixedHeader
+     fixedHeaderScrollHeight="400px"
+     selectableRows
+     selectableRowsHighlight
+     highlightOnHover
+     onSelectedRowsChange={row_selected}
+     //actions={actionsMemo}
+     subHeader
+     subHeaderComponent={<input type='text' placeholder='Search here' className='w-25 form-control' value={search} onChange={(e)=>setSearch(e.target.value)}/>}
+     // subHeaderAlign='Left'
+     />
+     <div>
+     <Button className='btn btn-sm' style={{width:80,height:35,marginLeft:455,marginTop:20,marginBottom:10,backgroundColor:"rgb(2, 123, 198)",border:"none"}} onClick={handleChange}>Save</Button> 
+     </div>
+  
+    </>
+       
+       
+    
+    
+   )
+};
+export default CountriesTables_Analysis;
