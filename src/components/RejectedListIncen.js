@@ -6,12 +6,12 @@ import base_url from "../api/bootapi";
 import { Row, Col, CardHeader,Card,CardText,CardBody,Spinner} from 'reactstrap';
 import Header from "./Header";
 import Menus from "./Menus";
-const ConfDetails=()=>{
+const RejectedListIncen=()=>{
   const [search, setSearch]=useState("");
   const [countries, setCountries]=useState([]);
   const [filteredCountries, setFilteredCountries]=useState([]);
   const getCountries= async ()=>{
-    axios.get(`${base_url}/incentivemaster`).then(
+    axios.get(`${base_url}/rejectedincenlist`).then(
       (response)=>{ 
         document.getElementById("spinner").style.display = 'none'; 
         setCountries(response.data);
@@ -21,55 +21,71 @@ const ConfDetails=()=>{
           //alert(error);
       },[]);
   };
-  const columns=[
-    {
-        name:<b>ID</b>,
-        selector:(row) =>row.id,
-        sortable:true,
-        
-    },
-    {
-        name:<b>EMP_ID</b>,
-        selector:(row) =>row.emp_code
-    },
-    {
-        name:<b>EMP_TYPE</b>,
-        selector:(row) =>row.emp_type
-    },
-    {
-        name:<b>SALES_TYPE</b>,
-        selector:(row) =>row.emp_sales_type
-    },
-    {
-        name:<b>EMP_CTC</b>,
-        selector:(row) =>row.emp_ctc
-    },
-    {
-        name:<b>PO_NUMBER</b>,
-        selector:(row) =>row.po_number
-    },
-    {
-        name:<b>EMP_TARGET</b>,
-        selector:(row) =>row.emp_incentive_trgt
-    },
-    {
-        name:<b>MONTH</b>,
-        selector:(row) =>row.incentive_month
-    },
-    {
-      name:<b>YEAR</b>,
-      selector:(row) =>row.incentive_year
-    },
-    {
-      name:<b>INCENTIVE_STATUS</b>,
-      selector:(row) =>row.incentive_status
-    },
-    {
-      name:<b>"INCENTIVE_AMOUNT</b>,
-      selector:(row) =><b style={{color:'red'}}>{row.incentive_amount}</b>
-  }
-   ];
+const columns=[
+  {
 
+    name:<b>ID</b>,
+    selector:(row) =>row.id,
+    sortable:true
+    },
+    {
+      name:<b>Empt Id</b>,
+      selector:(row) =>row.emp_id
+      },
+    {
+      name:<b>Type</b>,
+      selector:(row) =>row.emp_type
+      },
+      {
+        name:<b>Sales Type</b>,
+        selector:(row) =>row.sales_type
+        },
+        {
+          name:<b>Emp_ctc</b>,
+          selector:(row) =>row.emp_ctc
+          },
+          {
+            name:<b>Po number</b>,
+            selector:(row) =>row.po_number
+            },
+            {
+              name:<b>Emp Target</b>,
+              selector:(row) =>row.emp_target
+              },
+              {
+                name:<b>Emp Target</b>,
+                selector:(row) =>row.emp_target
+                },
+                {
+                  name:<b>Incentive Status</b>,
+                  selector:(row) =>row.incentive_status,
+                  sortable:true
+                  },
+    
+    {
+    name:<b>Year</b>,
+    selector:(row) =>row.year,
+    sortable:true
+    },
+    {
+    name:<b>Month</b>,
+    selector:(row) =>row.month
+    },
+    
+    // {
+    // name:<b>POLICY_MODEL</b>,
+    // selector:(row) =>row.policy_model
+    // },
+    {
+      name:<b>Approval Status</b>,
+      selector:(row) =>row.approval_status
+    },
+    {
+      name:<b>Incentive_amount</b>,
+      selector:(row) =>row.Incentive_amount
+    }
+
+];
 
 useEffect(()=>{
   document.getElementById("spinner").style.display = 'block';
@@ -88,7 +104,7 @@ useEffect(()=>{
             <Col md={9} style={{marginLeft:-71,marginTop:60}}>
               <Card className="my-2" style={{width: '67rem', marginLeft:-7,height:"100%",marginTop:80}}>
                 <CardHeader style={{backgroundColor: '#2677c145'}}>
-                          <h6 style={{color:'#505458'}}>Configuration Master</h6>
+                          <h6 style={{color:'#505458'}}>Rejected Incentive List</h6>
                 </CardHeader>
                 <CardBody style={{border:"2px solid transparent"}}>
                  
@@ -117,4 +133,4 @@ useEffect(()=>{
     
    )
 };
-export default ConfDetails;
+export default RejectedListIncen;

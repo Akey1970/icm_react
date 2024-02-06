@@ -6,12 +6,12 @@ import base_url from "../api/bootapi";
 import { Row, Col, CardHeader,Card,CardText,CardBody,Spinner} from 'reactstrap';
 import Header from "./Header";
 import Menus from "./Menus";
-const ConfDetails=()=>{
+const ViewUserDetails=()=>{
   const [search, setSearch]=useState("");
   const [countries, setCountries]=useState([]);
   const [filteredCountries, setFilteredCountries]=useState([]);
   const getCountries= async ()=>{
-    axios.get(`${base_url}/incentivemaster`).then(
+    axios.get(`${base_url}/user_reg_master`).then(
       (response)=>{ 
         document.getElementById("spinner").style.display = 'none'; 
         setCountries(response.data);
@@ -21,55 +21,45 @@ const ConfDetails=()=>{
           //alert(error);
       },[]);
   };
-  const columns=[
-    {
-        name:<b>ID</b>,
-        selector:(row) =>row.id,
-        sortable:true,
-        
+const columns=[
+{
+  // <a href="/schemedetails?scheme_id=22">{row.scheme_id}</a>
+  // <a href="/schemedetails?scheme_id={row.scheme_id}">{row.scheme_id}</a>
+name:<b>ID</b>,
+selector:(row) =>row.id,
+sortable:true
+},
+{
+name:<b>EMP_CODE</b>,
+selector:(row) =>row.emp_code1,
+sortable:true
+},
+{
+name:<b>FIRST_NAME</b>,
+selector:(row) =>row.first_name
+},
+{
+name:<b>LAST_NAME</b>,
+selector:(row) =>row.last_name
+},
+{
+  name:<b>EMAIL_ID</b>,
+  selector:(row) =>row.user_mail
+  },
+  {
+    name:<b>IS_ACTIVATED</b>,
+    selector:(row) =>row.is_activated
     },
     {
-        name:<b>EMP_ID</b>,
-        selector:(row) =>row.emp_code
-    },
-    {
-        name:<b>EMP_TYPE</b>,
-        selector:(row) =>row.emp_type
-    },
-    {
-        name:<b>SALES_TYPE</b>,
-        selector:(row) =>row.emp_sales_type
-    },
-    {
-        name:<b>EMP_CTC</b>,
-        selector:(row) =>row.emp_ctc
-    },
-    {
-        name:<b>PO_NUMBER</b>,
-        selector:(row) =>row.po_number
-    },
-    {
-        name:<b>EMP_TARGET</b>,
-        selector:(row) =>row.emp_incentive_trgt
-    },
-    {
-        name:<b>MONTH</b>,
-        selector:(row) =>row.incentive_month
-    },
-    {
-      name:<b>YEAR</b>,
-      selector:(row) =>row.incentive_year
-    },
-    {
-      name:<b>INCENTIVE_STATUS</b>,
-      selector:(row) =>row.incentive_status
-    },
-    {
-      name:<b>"INCENTIVE_AMOUNT</b>,
-      selector:(row) =><b style={{color:'red'}}>{row.incentive_amount}</b>
-  }
-   ];
+      name:<b>USER_TYPE</b>,
+      selector:(row) =>row.user_type
+      },
+      {
+        name:<b>ISICM</b>,
+        selector:(row) =>row.is_icm
+        }
 
+];
 
 useEffect(()=>{
   document.getElementById("spinner").style.display = 'block';
@@ -85,10 +75,10 @@ useEffect(()=>{
               <Menus/>
             </Col>
 
-            <Col md={9} style={{marginLeft:-71,marginTop:60}}>
+            <Col md={9} style={{marginLeft:-71,marginTop:80}}>
               <Card className="my-2" style={{width: '67rem', marginLeft:-7,height:"100%",marginTop:80}}>
                 <CardHeader style={{backgroundColor: '#2677c145'}}>
-                          <h6 style={{color:'#505458'}}>Configuration Master</h6>
+                          <h6 style={{color:'#505458'}}>User Master</h6>
                 </CardHeader>
                 <CardBody style={{border:"2px solid transparent"}}>
                  
@@ -102,7 +92,7 @@ useEffect(()=>{
                 fixedHeaderScrollHeight="400px"
                 selectableRowsHighlight
                 highlightOnHover
-              
+                
                 subHeader
                 subHeaderComponent={<input type='text' placeholder='Search here' className='w-25 form-control' value={search} onChange={(e)=>setSearch(e.target.value)}/>}
                 // subHeaderAlign='Left'
@@ -117,4 +107,4 @@ useEffect(()=>{
     
    )
 };
-export default ConfDetails;
+export default ViewUserDetails;

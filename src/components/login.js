@@ -16,18 +16,18 @@ const Login_Form=(props)=>{
     e.preventDefault();
     var res_otp="";
     
-    if(course.emp_code === "" || course.emp_code === undefined){
+    if(course.emp_code1 === "" || course.emp_code1 === undefined){
       
       toast('Plese Enter User Name');
      
      
     }else{
 
-      axios.get(`${base_url}/checkusernameExistOrnot?userName=`+course.emp_code).then(
+      axios.get(`${base_url}/checkusernameExistOrnot?userName=`+course.emp_code1).then(
         (response)=>{   
           console.log(response.data);
           res_otp=response.data;
-          props.aler(res_otp,course.emp_code);
+          props.aler(res_otp,course.emp_code1);
           toast('OTP Sent successfully');
           navigate("/forgotpass");
         },
@@ -47,53 +47,43 @@ const Login_Form=(props)=>{
   const postDataToServer=()=>{
  
     document.getElementById("spinner").style.display = 'block';
-    if(course.emp_code === undefined && course.password === undefined){
+    if(course.emp_code1 === undefined && course.password === undefined){
       toast('Plese Enter Your Credentials');
     }
-    else if(course.emp_code === ""|| course.emp_code===undefined){  
+    else if(course.emp_code1 === ""|| course.emp_code1===undefined){  
       toast('Plese Enter UserName'); 
    }else if(course.password === ""|| course.password===undefined){
      toast('Plese Enter Password');
    }
     else{
 
-      axios.post(`${base_url}/berger_login6`,course).then(
+      axios.post(`${base_url}/icm_login_auth`,course).then(
         (response)=>{
-         console.log("berger_login6 response___"); 
-         console.log(response.data);
-         if(response.data.status==="Y"){
-           props.alerfullname(response.data.fullname,response.data.emp_code,response.data.password);
+         
+         if(response.data[0].login_flag==="true"){
+          alert("login suuccess") 
+          props.alerfullname(response.data.fullname,response.data.emp_code,response.data.password);
            console.log(response.data);
-            localStorage.setItem("emp_menu", JSON.stringify(response.data.emp_code));
-            localStorage.setItem("emp_menu_password", JSON.stringify(response.data.password));
-            localStorage.setItem("emp_fullname", JSON.stringify(response.data.fullname));
-            localStorage.setItem("emp_id", JSON.stringify(response.data.empid));
+            localStorage.setItem("emp_menu", JSON.stringify(response.data[0].emp_code1));
+            localStorage.setItem("emp_menu_password", JSON.stringify(response.data[0].password));
+            localStorage.setItem("emp_fullname", JSON.stringify(response.data[0].first_name));
+            localStorage.setItem("emp_id", JSON.stringify(response.data[0].emp_code1));
             user_fullname=response.data.fullname;
  
             //setmenu(menu2);
-            axios.get(`${base_url}/berger_login_test_react?user_name=`+response.data.emp_code+`&password=`+response.data.password).then( 
+            axios.get(`${base_url}/icm_fetch_menu?user_name=`+response.data[0].emp_code1+`&password=`+response.data[0].password).then( 
                 (response)=>{   
                   localStorage.setItem("menu_list",JSON.stringify(response.data));
  
- 
+                  alert("inside fetch menu api")
+                  navigate("/dashcopy");
                  console.log("the full name data send to API marketing_react___"+response.data.fullname);
                   axios.get(`${base_url}/marketing_react?fullname=`+user_fullname).then(
                    (response)=>{   
                      setCourses_Count(response.data);
-                     console.log("header login API : ") 
-                     console.log(response.data);
                      localStorage.setItem("n_value", JSON.stringify(response.data.len));
                      localStorage.setItem("not_msg_list",JSON.stringify(response.data.DashbordApprover));
-                     var emp_id=localStorage.getItem("emp_id");
-                     emp_id=JSON.parse(emp_id);
-                     //alert(emp_id);
-                     if(emp_id==40 ||emp_id==3 ||emp_id==34){
-                         document.getElementById("spinner").style.display = 'none';
-                      navigate("/marketing");
-                     }
-                     else{
-                      navigate("/dashcopy");
-                     }
+                     navigate("/dashcopy");
                      
                    },
                    (error)=>{
@@ -102,7 +92,8 @@ const Login_Form=(props)=>{
             
                 },
                 (error)=>{
-                   console.log(error);
+                  alert("inside fetch menu error")
+                  console.log(error);
                 },[]);
  
             
@@ -142,13 +133,13 @@ const Login_Form=(props)=>{
         <img src={MyImage} alt="horse" style={{marginTop:39}} />
         <Form onSubmit={handleFormsubmit}>
             <FormGroup>
-              <Label for="exampleEmail" style={{marginLeft:-299,marginTop:25}}>Username</Label>
+              <Label for="emp_code1" style={{marginLeft:-299,marginTop:25}}>Username</Label>
               <Input
-                id="exampleEmail"
-                name="email"
+                id="emp_code1"
+                name="emp_code1"
                 type="text"
                 onChange={(e)=>{
-                  setCourses({... course,emp_code:e.target.value})
+                  setCourses({... course,emp_code1:e.target.value})
               }}
                 style={{marginLeft:43,width:365}}
 

@@ -11,7 +11,7 @@ const ConfDetails=()=>{
   const [countries, setCountries]=useState([]);
   const [filteredCountries, setFilteredCountries]=useState([]);
   const getCountries= async ()=>{
-    axios.get(`${base_url}/incentivemaster`).then(
+    axios.get(`${base_url}/confdetails`).then(
       (response)=>{ 
         document.getElementById("spinner").style.display = 'none'; 
         setCountries(response.data);
@@ -21,55 +21,28 @@ const ConfDetails=()=>{
           //alert(error);
       },[]);
   };
-  const columns=[
-    {
-        name:<b>ID</b>,
-        selector:(row) =>row.id,
-        sortable:true,
-        
-    },
-    {
-        name:<b>EMP_ID</b>,
-        selector:(row) =>row.emp_code
-    },
-    {
-        name:<b>EMP_TYPE</b>,
-        selector:(row) =>row.emp_type
-    },
-    {
-        name:<b>SALES_TYPE</b>,
-        selector:(row) =>row.emp_sales_type
-    },
-    {
-        name:<b>EMP_CTC</b>,
-        selector:(row) =>row.emp_ctc
-    },
-    {
-        name:<b>PO_NUMBER</b>,
-        selector:(row) =>row.po_number
-    },
-    {
-        name:<b>EMP_TARGET</b>,
-        selector:(row) =>row.emp_incentive_trgt
-    },
-    {
-        name:<b>MONTH</b>,
-        selector:(row) =>row.incentive_month
-    },
-    {
-      name:<b>YEAR</b>,
-      selector:(row) =>row.incentive_year
-    },
-    {
-      name:<b>INCENTIVE_STATUS</b>,
-      selector:(row) =>row.incentive_status
-    },
-    {
-      name:<b>"INCENTIVE_AMOUNT</b>,
-      selector:(row) =><b style={{color:'red'}}>{row.incentive_amount}</b>
-  }
-   ];
+const columns=[
+{
 
+name:<b>ID</b>,
+selector:(row) =>row.id,
+sortable:true
+},
+{
+name:<b>YEAR</b>,
+selector:(row) =>row.year,
+sortable:true
+},
+{
+name:<b>MONTH</b>,
+selector:(row) =>row.month
+},
+{
+name:<b>POLICY_MODEL</b>,
+selector:(row) =>row.policy_model
+}
+
+];
 
 useEffect(()=>{
   document.getElementById("spinner").style.display = 'block';

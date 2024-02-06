@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import CanvasJSReact from '@canvasjs/react-charts';
+//import CanvasJSReact from '@canvasjs/react-charts';
 import {ToastContainer,toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-var CanvasJS = CanvasJSReact.CanvasJS;
-var CanvasJSChart = CanvasJSReact.CanvasJSChart;
+// var CanvasJS = CanvasJSReact.CanvasJS;
+//  var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 const PieChart=()=>{
 	
 		const options = {
@@ -31,7 +31,7 @@ const PieChart=()=>{
 		}
 		return (
 		<div>
-			<CanvasJSChart options = {options}/>
+			{/* <CanvasJSChart options = {options}/> */}
 			
         </div>
 		);
